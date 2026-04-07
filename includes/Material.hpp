@@ -2,12 +2,21 @@
 #pragma once
 
 #include "Utils.hpp"
-#include "HittableList.hpp"
+#include "Hittable.hpp"
 #include "Texure.hpp"
 
 class Material {
 public:
   virtual ~Material() {}
+
+  // 発行しないマテリアルでemitted()を実装しないで済むよ実装しないで済むように、基底クラスで黒を返す
+  virtual color emitted(double u, double v, const point3& p) const {
+    (void)u;
+    (void)v;
+    (void)p;
+    return color(0, 0, 0);
+  }
+
   // 物体表面と例の相互作用を処理する
   virtual bool  scatter(
     const Ray& r_in,
@@ -17,8 +26,9 @@ public:
   ) const = 0;
 };
 
-double schlick(double cosine, double ref_idx) {
-  auto  r0 = (1 - ref_idx) / (1 + ref_idx);
+// シュリックの近似
+inline double schlick(double cosine, double ref_idx) {
+  double  r0 = (1 - ref_idx) / (1 + ref_idx);
   r0 = r0 * r0;
   return r0 + (1 - r0) * pow((1 - cosine), 5);
 }
@@ -110,4 +120,29 @@ public:
 
 public:
   double  ref_idx;
+};
+
+class Light : public Material {
+public:
+  Light(shared_ptr<Texture> a) : emit(a) {}
+
+  virtual bool  scatter(
+    const Ray& r_in,
+    const hit_record& rec,
+    color& attenuation,
+    Ray& scattered
+  ) const {
+    (void)r_in;
+    (void)rec;
+    (void)attenuation;
+    (void)scattered;
+    return false;
+  }
+
+  virtual color emitted(double u, double v, const point3& p) const {
+    return emit->value(u, v, p);
+  }
+
+public:
+  shared_ptr<Texture>  emit;
 };

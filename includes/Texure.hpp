@@ -75,7 +75,7 @@ public:
 
   Image() : data(nullptr), width(0), height(0), byte_per_scanline(0) {}
   Image(const char* filename) {
-    auto  components_per_pixel = byte_per_pixel;
+    int  components_per_pixel = byte_per_pixel;
   
     data = stbi_load(filename, &width, &height, &components_per_pixel, components_per_pixel);
     if (!data) {
@@ -101,15 +101,15 @@ public:
     u = clamp(u, 0.0, 1.0);
     v = 1.0 - clamp(v, 0.0, 1.0); // vを反転させて画像の座標形に合わせる
 
-    auto  i = static_cast<int>(u * width);
-    auto  j = static_cast<int>(v * height);
+    int  i = static_cast<int>(u * width);
+    int  j = static_cast<int>(v * height);
 
     // 整数座標をさらに切り捨てる(テクスチャ座標は1.0になってはいけない)
     if (i >= width) i = width - 1;
     if (j >= height) j = height - 1;
 
-    const auto  color_scale = 1.0 / 255.0;
-    auto  pixel = data + j * byte_per_scanline + i * byte_per_pixel;
+    const double  color_scale = 1.0 / 255.0;
+    unsigned char*  pixel = data + j * byte_per_scanline + i * byte_per_pixel;
 
     return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
   }

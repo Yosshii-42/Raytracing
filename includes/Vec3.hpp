@@ -109,24 +109,24 @@ inline Vec3 unit_vector(Vec3 v) {
 
 // 拡散方向を作る
 // 球体の中にランダムに点を取る ノイズ多い
-Vec3  random_in_unit_sphere() {
+inline Vec3  random_in_unit_sphere() {
   while (true) {
-    auto  p = Vec3::random(-1, 1);
+    Vec3  p = Vec3::random(-1, 1);
     if (p.length_squared() >= 1) continue;
     return p;
   }
 }
 
 // ランバーティアン法 物理的に正しい
-Vec3  random_unit_vector() {
-  auto  a = random_double(0, 2 * pi);
-  auto  z = random_double(-1, 1);
-  auto  r = sqrt(1 - z * z);
+inline Vec3  random_unit_vector() {
+  double  a = random_double(0, 2 * pi);
+  double  z = random_double(-1, 1);
+  double  r = sqrt(1 - z * z);
   return Vec3(r * cos(a), r * sin(a), z);
 }
 
 // 均一な半球分布 綺麗
-Vec3  random_in_hemisphere(const Vec3& normal) {
+inline Vec3  random_in_hemisphere(const Vec3& normal) {
   Vec3  in_unit_sphere = random_in_unit_sphere();
   if (dot(in_unit_sphere, normal) > 0.0)
     return in_unit_sphere;
@@ -135,7 +135,7 @@ Vec3  random_in_hemisphere(const Vec3& normal) {
 }
 
 // 反射
-Vec3  reflect(const Vec3& v, const Vec3& n) {
+inline Vec3  reflect(const Vec3& v, const Vec3& n) {
   return v - 2 * dot(v, n) * n;
 }
 
@@ -151,8 +151,8 @@ Vec3  reflect(const Vec3& v, const Vec3& n) {
 // perpendicular: 垂直
 // r_out_parallel: 表面に平行な成分
 // r_out_perp: 法線方向の成分（名前は perp だが、この式では n 方向の成分）
-Vec3 refract(const Vec3& uv, const Vec3& n, double etai_over_etat) {
-  auto cos_theta = fmin(dot(-uv, n), 1.0);
+inline Vec3 refract(const Vec3& uv, const Vec3& n, double etai_over_etat) {
+  double cos_theta = fmin(dot(-uv, n), 1.0);
   Vec3 r_out_parallel = etai_over_etat * (uv + cos_theta * n);
   Vec3 r_out_perp = -sqrt(fabs(1.0 - r_out_parallel.length_squared())) * n;
   return r_out_parallel + r_out_perp;

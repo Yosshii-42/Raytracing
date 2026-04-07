@@ -11,14 +11,14 @@ public:
     double vfov,  // 垂直方向の視野角
     double aspect_ratio
   ) {
-    auto  theta = degrees_to_radians(vfov);
-    auto  h = tan(theta / 2);       // 画面の半分の高さを求める
-    auto  viewport_height = 2.0 * h;
-    auto  viewport_width = aspect_ratio * viewport_height;
+    double  theta = degrees_to_radians(vfov);
+    double  h = tan(theta / 2);       // 画面の半分の高さを求める
+    double  viewport_height = 2.0 * h;
+    double  viewport_width = aspect_ratio * viewport_height;
 
-    auto  w = unit_vector(lookfrom - lookat);
-    auto  u = unit_vector(cross(vup, w));
-    auto  v = cross(w, u);
+    Vec3  w = unit_vector(lookfrom - lookat);
+    Vec3  u = unit_vector(cross(vup, w));
+    Vec3  v = cross(w, u);
 
     origin = lookfrom;
     horizontal = viewport_width * u;

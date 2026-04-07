@@ -3,13 +3,13 @@
 #include "Vec3.hpp"
 #include <iostream>
 
-void  write_color(std::ostream &out, color pixel_color, int samples_per_pixcel) {
-  auto  r = pixel_color.x();
-  auto  g = pixel_color.y();
-  auto  b = pixel_color.z();
+inline void  write_color(std::ostream &out, color pixel_color, int samples_per_pixcel) {
+  double  r = pixel_color.x();
+  double  g = pixel_color.y();
+  double  b = pixel_color.z();
 
   // 色の和をサンプル数で割り、gamma = 2 のガンマ補正を行う
-  auto scale = 1.0 / samples_per_pixcel;
+  double scale = 1.0 / samples_per_pixcel;
   r = sqrt(scale * r);
   g = sqrt(scale * g);
   b = sqrt(scale * b);

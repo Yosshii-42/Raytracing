@@ -3,7 +3,8 @@ CPP	= c++
 CPPFLAG	= -Wall -Wextra -Werror -std=c++11
 # CPPFLAG	+= -fsanitize=address -g
 INC_DIR	= ./includes
-SRCS	= srcs/main.cpp
+SRCS	= srcs/main.cpp \
+				srcs/World.cpp
 
 OBJS	= $(SRCS:.cpp=.o)
 

@@ -27,13 +27,13 @@ public:
 
 bool  Sphere::hit(const Ray& r, double t_min, double t_max, hit_record& rec) const {
   Vec3  oc = r.origin() - center;
-  auto  a = dot(r.direction(), r.direction());
-  auto  half_b = dot(oc, r.direction());
-  auto  c = oc.length_squared() - radius * radius;
-  auto  discriminant = half_b * half_b - a * c;
+  double  a = dot(r.direction(), r.direction());
+  double  half_b = dot(oc, r.direction());
+  double  c = oc.length_squared() - radius * radius;
+  double  discriminant = half_b * half_b - a * c;
   if (discriminant < 0) return false;
-  auto  root = sqrt(discriminant);
-  auto  temp = (-half_b - root) / a;
+  double  root = sqrt(discriminant);
+  double  temp = (-half_b - root) / a;
   if (temp < t_max && temp > t_min) {
     rec.t = temp;
     rec.p = r.at(rec.t);
@@ -58,8 +58,8 @@ bool  Sphere::hit(const Ray& r, double t_min, double t_max, hit_record& rec) con
 
 // u, vは[0, 1]にマッピングする
 void  get_sphere_uv(const Vec3& p, double& u, double& v) {
-  auto  phi = atan2(p.z(), p.x());
-  auto  theta = asin(p.y());
+  double  phi = atan2(p.z(), p.x());
+  double  theta = asin(p.y());
   u = 1- (phi + pi) / (2 * pi);
   v = (theta + pi / 2) / pi;
 }

@@ -35,6 +35,6 @@ inline double clamp(double x, double min, double max) {
   return x;
 }
 
-// 共闘ヘッダー
+// 共通ヘッダー
 #include "Ray.hpp"
 #include "Vec3.hpp"
