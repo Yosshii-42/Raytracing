@@ -26,7 +26,7 @@ struct hit_record {
   }
 };
 
-// レイを受け取って自身と交わるかを判定する関数交交わるかを判定する関数hitを持つ
+// レイを受け取って自身と交わるかを判定する関数hitを持つ
 class Hittable {
 public:
   virtual ~Hittable() {}
@@ -53,6 +53,7 @@ public:
   std::vector<shared_ptr<Hittable>> objects;
 };
 
+// 複数のオブジェクトに対してレイとの交差判定を行い、最も手前（カメラに最も近い）で交差したオブジェクトの情報を取得する関数
 inline bool  HittableList::hit(const Ray& r, double t_min, double t_max, hit_record& rec) const {
   hit_record  temp_rec;
   bool        hit_anything = false;
