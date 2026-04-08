@@ -110,20 +110,21 @@ Scene  checker() {
 Scene  sample_light() {
   HittableList  world;
   shared_ptr<Material> red = make_shared<Lambartian>(make_shared<SolidColor>(0.9, 0.1, 0.1));
+  shared_ptr<Material> white = make_shared<Lambartian>(make_shared<SolidColor>(0.9, 0.9, 0.9));
   shared_ptr<Material> grey = make_shared<Lambartian>(make_shared<SolidColor>(0.5, 0.5, 0.5));
-  shared_ptr<Material> difflight = make_shared<Light>(make_shared<SolidColor>(8, 8, 8));
+  shared_ptr<Material> difflight = make_shared<DirectionalLight>(make_shared<SolidColor>(8, 8, 8));
   shared_ptr<Material> wall = make_shared<Lambartian>(make_shared<SolidColor>(0.95, 0.92, 0.88));
 
   world.add(make_shared<Sphere>(point3(0, -1000, 0), 1000, grey));  // グメーの床面
-  world.add(make_shared<Sphere>(point3(2, 2, -5), 2, red));         // 赤い球
-  world.add(make_shared<Sphere>(point3(0, 7, -5), 3, make_shared<Dielectric>(1.5)));    // ガラス球
-  world.add(make_shared<Sphere>(point3(0, 7, -5), 0.5, difflight));   // 球の発光体
-  world.add(make_shared<RectangleXY>(3, 5, 1, 3, -2, difflight));     // 四角い発光体
+  world.add(make_shared<Sphere>(point3(2, 2, -5), 2, white));         // 赤い球
+  // world.add(make_shared<Sphere>(point3(0, 7, -5), 3, make_shared<Dielectric>(1.5)));    // ガラス球
+  // world.add(make_shared<Sphere>(point3(0, 7, -5), 0.5, difflight));   // 球の発光体
+  // world.add(make_shared<RectangleXY>(3, 5, 1, 3, -2, difflight));     // 四角い発光体
   world.add(make_shared<RectangleXY>(-20, 20, -2, 20, -10, wall));
   // world.add(make_shared<Sphere>(point3(0, 7, -5), -2.5, make_shared<Dielectric>(1.5))); // ガラス球を中空にする
   return Scene{
     world,
-    Camera(point3(0, 3, 40), point3(0, 3, 0), Vec3(0, 1, 0), 20, 16.0 / 9.0),
+    Camera(point3(0, 15, 40), point3(0, 6, 0), Vec3(0, 1, 0), 20, 16.0 / 9.0),
     color(0.0, 0.0, 0.0) 
   };
 }
@@ -135,7 +136,7 @@ Scene cornel_box() {
   shared_ptr<Material>  red_wall = make_shared<Lambartian>(make_shared<SolidColor>(.65, .05, .05));
   shared_ptr<Material>  white_wall = make_shared<Lambartian>(make_shared<SolidColor>(.73, .73, .73));
   shared_ptr<Material>  green_wall = make_shared<Lambartian>(make_shared<SolidColor>(.12, .45, .15));
-  shared_ptr<Material>  light = make_shared<Light>(make_shared<SolidColor>(100, 100, 100));
+  shared_ptr<Material>  light = make_shared<DirectionalLight>(make_shared<SolidColor>(100, 100, 100));
 
   world.add(make_shared<RectangleYZ>(0, 555, 0, 555, 555, green_wall));
   world.add(make_shared<RectangleYZ>(0, 555, 0, 555, 0, red_wall));

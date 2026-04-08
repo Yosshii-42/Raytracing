@@ -1,4 +1,4 @@
-// Material(基底クラス), Lambertian(マット), Metal(金属), Dielectric(透明), Light(発光体)
+// Material(基底クラス), Lambertian(マット), Metal(金属), Dielectric(透明), DirectionalLight(発光体)
 #pragma once
 
 #include "Utils.hpp"
@@ -9,14 +9,6 @@ class Material {
 public:
   virtual ~Material() {}
 
-  // 発光しないマテリアルでemitted()を実装しないで済むよ実装しないで済むように、基底クラスで黒を返す
-  virtual color emitted(double u, double v, const point3& p) const {
-    (void)u;
-    (void)v;
-    (void)p;
-    return color(0, 0, 0);
-  }
-
   // 物体表面と例の相互作用を処理する
   virtual bool  scatter(
     const Ray& r_in,
@@ -24,6 +16,22 @@ public:
     color& attnuation,
     Ray& scattered
   ) const = 0;
+
+  // PointLight用
+  virtual color diffuse_color(double u, double v, const point3& p) const {
+    (void)u;
+    (void)v;
+    (void)p;
+    return color(1, 1, 1);
+  }
+
+  // 発光しないマテリアルでemitted()を実装しないで済むよ実装しないで済むように、基底クラスで黒を返す
+  virtual color emitted(double u, double v, const point3& p) const {
+    (void)u;
+    (void)v;
+    (void)p;
+    return color(0, 0, 0);
+  }
 };
 
 // シュリックの近似
@@ -49,6 +57,10 @@ public:
     scattered = Ray(rec.p, scatter_direction);
     attenuation = albedo->value(rec.u, rec.v, rec.p);
     return true;
+  }
+
+  virtual color diffuse_color(double u, double v, const point3& p) const {
+    return albedo->value(u, v, p);
   }
 
 public:
@@ -122,9 +134,9 @@ public:
   double  ref_idx;
 };
 
-class Light : public Material {
+class DirectionalLight : public Material {
 public:
-  Light(shared_ptr<Texture> a) : emit(a) {}
+  DirectionalLight(shared_ptr<Texture> a) : emit(a) {}
 
   virtual bool  scatter(
     const Ray& r_in,
