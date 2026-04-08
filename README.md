@@ -1,4 +1,5 @@
 ## 実行
+
 - main()の中でシーンを選択する(49~53)
 - make
 - ./raytracing > image.ppm
@@ -30,3 +31,7 @@
   直方体を表すクラス
 - **World**  
   シーンリスト
+
+## 参考資料
+
+- https://inzkyk.xyz/ray_tracing_in_one_weekend/
