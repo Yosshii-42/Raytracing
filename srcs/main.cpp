@@ -45,6 +45,8 @@ int main() {
   const double aspect_ratio = 16.0 / 9.0;
   const int image_width = 384;        // 画面の大きさを決める
   const int image_height = static_cast<int>(image_width / aspect_ratio);
+  
+  // scene:sample_light()で使う光源
   PointLight  light = { point3(0, 8, -5), color(0.5, 0.0, 1.0) };
 
   //// 実行時に処理速度を見て変更 ////
