@@ -9,7 +9,7 @@ class Material {
 public:
   virtual ~Material() {}
 
-  // 発行しないマテリアルでemitted()を実装しないで済むよ実装しないで済むように、基底クラスで黒を返す
+  // 発光しないマテリアルでemitted()を実装しないで済むよ実装しないで済むように、基底クラスで黒を返す
   virtual color emitted(double u, double v, const point3& p) const {
     (void)u;
     (void)v;

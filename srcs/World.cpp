@@ -8,6 +8,7 @@
 
 #include "Sphere.hpp"
 #include "Rectabgle.hpp"
+#include "World.hpp"
 
 #include <iostream>
 
@@ -15,7 +16,7 @@
 #include "stb_image.h"
 
 // 多数の球を表示
-HittableList random_scene() {
+Scene random_scene() {
   HittableList world;
 
   shared_ptr<Material> ground_material = 
@@ -56,22 +57,32 @@ HittableList random_scene() {
   shared_ptr<Material> material3 = make_shared<Metal>(color(0.7, 0.6, 0.5));
   world.add(make_shared<Sphere>(point3(4, 1, 0), 1.0, material3));
 
-  return world;
+  return Scene{
+    world,
+    Camera(point3(13, 2, 3), point3(0, 0, 0), Vec3(0, 1, 0), 20, 16.0 / 9.0),
+    color(0.70, 0.80, 1.00) 
+  };
 }
 
 // 地球儀
-HittableList  earth() {
-  shared_ptr<Texture>  earth = make_shared<Image>("earthmap.jpg");
-  shared_ptr<Lambartian>  earth_surface = make_shared<Lambartian>(earth);
-  shared_ptr<Hittable>  globe = make_shared<Sphere>(point3(0, 0, 0), 2, earth_surface);
-  return HittableList(globe);
+Scene  earth() {
+  shared_ptr<Texture>  earth_tex = make_shared<Image>("images/earthmap.jpg");
+  shared_ptr<Lambartian>  earth_surface = make_shared<Lambartian>(earth_tex);
+  HittableList world;
+  world.add(make_shared<Sphere>(point3(0, 0, 0), 2, earth_surface));
+  return Scene{
+    world,
+    Camera(point3(12, 2, 3), point3(0, 0, 0), Vec3(0, 1, 0), 20, 16.0 / 9.0),
+    color(0.70, 0.80, 1.00) 
+  };
 }
 
 // チェッカーマーク入り
-HittableList  checker() {
+Scene  checker() {
   double  R = cos(pi/4);
   HittableList  world;
 
+  // 平面に貼る時はChecker, 球体に貼る時はUVCcheckerを使う
   shared_ptr<Texture>  checker = make_shared<Checker>(
     make_shared<SolidColor>(0.2, 0.3, 0.1),
     make_shared<SolidColor>(0.9, 0.9, 0.9)
@@ -87,11 +98,16 @@ HittableList  checker() {
     point3(R, 0, -6), R, make_shared<Dielectric>(1.5)));
   world.add(make_shared<Sphere>(
     point3(R, 0, -6), (R * -0.9), make_shared<Dielectric>(1.5)));
-  return world;
+
+  return Scene{
+    world,
+    Camera(point3(6, 6, 1), point3(0, 0, -6), Vec3(0, 1, 0), 15, 16.0 / 9.0),
+    color(0.70, 0.80, 1.00) 
+  };
 }
 
 // 発光体 使用時には、main()のbackgroundを(0, 0, 0)にする
-HittableList  sample_light() {
+Scene  sample_light() {
   HittableList  world;
   shared_ptr<Material> red = make_shared<Lambartian>(make_shared<SolidColor>(0.9, 0.1, 0.1));
   shared_ptr<Material> grey = make_shared<Lambartian>(make_shared<SolidColor>(0.5, 0.5, 0.5));
@@ -105,11 +121,15 @@ HittableList  sample_light() {
   world.add(make_shared<RectangleXY>(3, 5, 1, 3, -2, difflight));     // 四角い発光体
   world.add(make_shared<RectangleXY>(-20, 20, -2, 20, -10, wall));
   // world.add(make_shared<Sphere>(point3(0, 7, -5), -2.5, make_shared<Dielectric>(1.5))); // ガラス球を中空にする
-  return world;
+  return Scene{
+    world,
+    Camera(point3(0, 3, 40), point3(0, 3, 0), Vec3(0, 1, 0), 20, 16.0 / 9.0),
+    color(0.0, 0.0, 0.0) 
+  };
 }
 
 // コーネルボックス
-HittableList cornel_box() {
+Scene cornel_box() {
   HittableList world;
 
   shared_ptr<Material>  red_wall = make_shared<Lambartian>(make_shared<SolidColor>(.65, .05, .05));
@@ -123,6 +143,9 @@ HittableList cornel_box() {
   world.add(make_shared<RectangleZX>(0, 555, 0, 555, 0, white_wall));
   world.add(make_shared<RectangleZX>(0, 555, 0, 555, 555, white_wall));
   world.add(make_shared<RectangleXY>(0, 555, 0, 555, 555, white_wall));
-
-  return world;
+  return Scene{
+    world,
+    Camera(point3(278, 278, -800), point3(278, 278, 0), Vec3(0, 1, 0), 40, 1.0),
+    color(0.0, 0.0, 0.0) 
+  };
 }

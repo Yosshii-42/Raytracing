@@ -60,6 +60,9 @@ bool  Sphere::hit(const Ray& r, double t_min, double t_max, hit_record& rec) con
 void  get_sphere_uv(const Vec3& p, double& u, double& v) {
   double  phi = atan2(p.z(), p.x());
   double  theta = asin(p.y());
-  u = 1- (phi + pi) / (2 * pi);
+  u = 1 - (phi + pi) / (2 * pi);
+  u += 0.25;
+  if (u > 1.0)
+    u -= 1.0;
   v = (theta + pi / 2) / pi;
 }

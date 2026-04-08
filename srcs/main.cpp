@@ -6,11 +6,6 @@
 #include "Material.hpp"
 #include "World.hpp"
 
-// #include <iostream>
-
-// #define STB_IMAGE_IMPLEMENTATION
-// #include "stb_image.h"
-
 // 色の計算
 color ray_color(const Ray& r, const color& background, const Hittable& world, int depth) {
   //　hitを問い合わせる
@@ -33,35 +28,33 @@ color ray_color(const Ray& r, const color& background, const Hittable& world, in
 
   return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
 
-  // 背景の描画
-  Vec3 unit_direction = unit_vector(r.direction());
-  double t = 0.5 * (unit_direction.y() + 1.0); // -1 ~ +1 を 0 ~ 1 に変換
-  return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
+  // // 背景の描画
+  // Vec3 unit_direction = unit_vector(r.direction());
+  // double t = 0.5 * (unit_direction.y() + 1.0); // -1 ~ +1 を 0 ~ 1 に変換
+  // return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
 }
 
 int main() {
-  // const double aspect_ratio = 16.0 / 9.0;
-  const double aspect_ratio = 1.0;
-
-  const int image_width = 384;
-  // const int image_width = 500;
-
+  const double aspect_ratio = 16.0 / 9.0;
+  const int image_width = 384;        // 画面の大きさを決める
   const int image_height = static_cast<int>(image_width / aspect_ratio);
-  const int samples_per_pixcel = 1000; // 1点あたりのレイを飛ばす回数
-  const int max_depth = 20;
-  // const color background(0.70, 0.80, 1.00);
-  const color background(0, 0, 0);
+
+  //// 実行時に処理速度を見て変更 ////
+  const int samples_per_pixcel = 500;  // 1点あたりのレイを飛ばす回数
+  const int max_depth = 10;           // 再帰回数
 
   std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
-  HittableList  world;
-  // world = random_scene();
-  // world = checker();
-  // world = earth();
-  // world = sample_light();
-  world = cornel_box();
+  //// シーン選択 ひとつだけコメントアウトを外す ////
+  Scene scene = checker();
+  // Scene scene = earth();
+  // Scene scene = random_scene();   // 実行時は処理の負荷を下げる
+  // Scene scene = sample_light();
+  // Scene scene = cornel_box();  // 実行時は const double aspect_ratio = 1.0; const int image_width = 500;
 
-  Camera  cam(point3(278, 278, -800), point3(278, 278, 0), Vec3(0, 1, 0), 40, aspect_ratio);
+  HittableList world = scene.world;
+  Camera cam = scene.cam;
+  color background = scene.background;
 
   for (int j = image_height - 1; j >= 0; --j) {
     std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
